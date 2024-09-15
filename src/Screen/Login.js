@@ -1,78 +1,89 @@
-import * as React from 'react';
-import { useState } from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from "axios"
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Overseas Companion
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import axios from "axios"; // Ensure Axios is installed
+import React, { useState } from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const [isSignIn, setIsSignIn] = useState(true);
+  const [isSignIn, setIsSignIn] = useState(true); // Toggle between SignIn and SignUp
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
     remember: false,
   });
 
-  const handleSignInClick = (event) => {
-    event.preventDefault();
-    setIsSignIn(true);
-  };
-
-  const handleSignUpClick = (event) => {
-    event.preventDefault();
-    setIsSignIn(false);
-  };
-
+  // Handle form data change
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+
+  // Handle form submit
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (isSignIn) {
-      console.log({
-        email: formData.email,
-        password: formData.password,
-      });
-    } else {
-      console.log({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-       
-      });
+
+    try {
+      if (isSignIn) {
+        const response = await axios.post(
+          "http://localhost:3000/admin/signin",
+          {
+            username: formData.email,
+            password: formData.password,
+          }
+        );
+
+        const { token } = response.data;
+        console.log("Sign-in successful, token received:", token);
+
+        // Save token in localStorage for future use
+        localStorage.setItem("token", token);
+        navigate("/");
+      } else {
+        // Sign-up request
+        const response = await axios.post(
+          "http://localhost:3000/admin/signup",
+          {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            username: formData.email,
+            password: formData.password,
+          }
+        );
+
+        const { token } = response.data;
+        localStorage.setItem("token", token);
+        navigate("/");
+      }
+    } catch (error) {
+      if (error.response) {
+        alert(
+          error.response.data.message || "An error occurred during the request"
+        );
+      } else if (error.request) {
+        alert("No response received from server. Please try again.");
+      } else {
+        alert("An error occurred: " + error.message);
+      }
     }
   };
 
@@ -83,18 +94,23 @@ export default function Login() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            {isSignIn ? 'Sign In' : 'Sign Up'}
+            {isSignIn ? "Sign In" : "Sign Up"}
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
+          >
             {!isSignIn && (
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -144,7 +160,7 @@ export default function Login() {
               label="Password"
               type="password"
               id="password"
-              autoComplete={isSignIn ? 'current-password' : 'new-password'}
+              autoComplete={isSignIn ? "current-password" : "new-password"}
               value={formData.password}
               onChange={handleChange}
             />
@@ -167,18 +183,23 @@ export default function Login() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              {isSignIn ? 'Sign In' : 'Sign Up'}
+              {isSignIn ? "Sign In" : "Sign Up"}
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2" onClick={isSignIn ? handleSignUpClick : handleSignInClick}>
-                  {isSignIn ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
+                <Link
+                  href="#"
+                  variant="body2"
+                  onClick={() => setIsSignIn(!isSignIn)}
+                >
+                  {isSignIn
+                    ? "Don't have an account? Sign Up"
+                    : "Already have an account? Sign In"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );
