@@ -1,4 +1,4 @@
-import axios from "axios"; // Ensure Axios is installed
+import axios from "axios"; 
 import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const [isSignIn, setIsSignIn] = useState(true); // Toggle between SignIn and SignUp
+  const [isSignIn, setIsSignIn] = useState(true); 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,7 +27,6 @@ export default function Login() {
     remember: false,
   });
 
-  // Handle form data change
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
     setFormData((prevData) => ({
@@ -38,7 +37,6 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  // Handle form submit
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -55,11 +53,9 @@ export default function Login() {
         const { token } = response.data;
         console.log("Sign-in successful, token received:", token);
 
-        // Save token in localStorage for future use
         localStorage.setItem("token", token);
         navigate("/");
       } else {
-        // Sign-up request
         const response = await axios.post(
           "http://localhost:3000/admin/signup",
           {

@@ -1,5 +1,4 @@
 import React from "react";
-import { FaCircleUser } from "react-icons/fa6";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { AiOutlineUser, AiOutlineLogout, AiOutlineMenu } from "react-icons/ai";
 import { Link } from "react-router-dom";

@@ -4,8 +4,10 @@ import dashpic1 from './images/question-mark-magnifying-glass.png'
 import Navbar from "./Navbar";
 import Lottie from 'lottie-react';
 import { Link } from "react-router-dom";
-import Homeanime from "./images/homepic.json"
+import Homeanime from "./images/homepic.json";
+import  WhatsApp  from "./images/Whatsapp.jpeg";
 import { FaFacebook,FaSquareInstagram, FaTwitter, FaYoutube } from "react-icons/fa6";
+
 
 function Home({ Toggle }) {
   return (
@@ -72,7 +74,8 @@ function Home({ Toggle }) {
               </p>
               <p className="d-flex flex-row"><FaSquareInstagram className="fs-2 m-1"/> <FaFacebook className="fs-2 m-1"/><FaTwitter className="fs-2 m-1"/><FaYoutube className="fs-2 m-1"/></p>
               <div className="d-flex justify-content-between  mt-3">
-                <button className="btn btn-primary">Whatsapp Group <BsArrowRight/></button>
+                <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Whatsapp Group <BsArrowRight/></button>
                 <button className="btn btn-primary">Help Center</button>
               </div>
             </div>
@@ -81,6 +84,15 @@ function Home({ Toggle }) {
               <img src={dashpic1} className="img-fluid float-end" alt="" style={{maxWidth:'100px'}}/>
             </div>
           </div>
+
+          <div className=" modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+              <img src={WhatsApp} className="img-fluid p-1"/>
+              </div>
+            </div>
+          </div>
+
       </div>
       
     
